@@ -1,9 +1,14 @@
 import express from 'express';
 import cors from 'cors';
+import authRouter from './routes/authRouter.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use(authRouter);
 
-app.listen(4000, () => console.log("Server running on port 4000"));
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
