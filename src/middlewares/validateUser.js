@@ -23,6 +23,6 @@ export async function validateUser(req, res, next){
     }catch(error){
         return res.sendStatus(500);
     }
-    
+
     
 }
