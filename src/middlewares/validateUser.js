@@ -19,10 +19,10 @@ export async function validateUser(req, res, next){
             return res.status(404).send('No session found');
         }
         res.locals.user = user[0];
-       
+       next();
     }catch(error){
         return res.sendStatus(500);
     }
     
-    next();
+    
 }
