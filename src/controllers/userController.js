@@ -40,3 +40,8 @@ export async function getUserData(req, res){
         return res.sendStatus(500);
     }
 }
+
+
+export async function getRanking(req, res){
+    //aaaa
+}
