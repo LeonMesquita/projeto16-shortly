@@ -1,13 +1,12 @@
 import connection from "../db/postgres.js";
 import bcrypt from 'bcrypt';
-import { nanoid } from 'nanoid'
+import { nanoid } from 'nanoid';
 
 export async function shortenUrl(req, res){
     const url = res.locals.url;
     const user = res.locals.user;
     const shortUrl = nanoid(8);
     const date = new Date;
-    console.log(user)
     try{
         await connection.query(`
             INSERT INTO urls ("shortUrl", url, "userId", "createdAt") VALUES ($1, $2, $3, $4)

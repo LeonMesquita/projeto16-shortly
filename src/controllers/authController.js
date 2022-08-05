@@ -1,7 +1,9 @@
 import connection from "../db/postgres.js";
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from "uuid";
-
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 export async function registerUser(req, res){
@@ -24,7 +26,7 @@ export async function registerUser(req, res){
 
 export async function loginUser(req, res){
     const user = res.locals.user;
-    const token = uuid();
+    const chaveSecreta = process.env.JWT_SECRET;
     try{
         const {rows: findUser} = await connection.query(`
         SELECT * FROM users WHERE email = $1
@@ -36,6 +38,8 @@ export async function loginUser(req, res){
     if(!bcrypt.compareSync(user.password, findUser[0].password)){
         return res.status(401).send('Incorrect email or password');
     }
+    const token = jwt.sign(user, chaveSecreta);
+    
     await connection.query(`
         INSERT INTO sessions (token, "userId") VALUES ($1, $2)
     `, [token, findUser[0].id]);
