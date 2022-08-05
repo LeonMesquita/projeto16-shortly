@@ -36,12 +36,27 @@ export async function getUserData(req, res){
         newData['shortenedUrls'] = shortenedUrls;
         return res.status(200).send(newData);
     }catch(error){
-        console.log(error)
         return res.sendStatus(500);
     }
 }
 
 
 export async function getRanking(req, res){
-    //aaaa
+    const query = `
+    SELECT users.id, users.name, COUNT(urls.id) as "linksCount",
+    SUM(CASE WHEN urls."userId" = users.id
+    THEN urls."visitCount"
+    ELSE 0 end)
+    AS "visitCount" FROM users
+    LEFT JOIN urls ON urls."userId" = users.id
+    GROUP BY users.id
+    ORDER BY "visitCount" DESC
+    LIMIT 10
+    `;
+    try{
+        const {rows: ranking} = await connection.query(query);
+        res.status(200).send(ranking);
+    }catch(error){
+        return res.sendStatus(500);
+    }
 }
