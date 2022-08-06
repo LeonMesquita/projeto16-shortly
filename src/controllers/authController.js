@@ -40,9 +40,7 @@ export async function loginUser(req, res){
     }
     const token = jwt.sign(user, chaveSecreta);
     
-    await connection.query(`
-        INSERT INTO sessions (token, "userId") VALUES ($1, $2)
-    `, [token, findUser[0].id]);
+
     return res.status(200).send(token);
 
     }catch(error){
@@ -52,3 +50,7 @@ export async function loginUser(req, res){
 
     
 }
+
+// await connection.query(`
+// INSERT INTO sessions (token, "userId") VALUES ($1, $2)
+// `, [token, findUser[0].id]);
