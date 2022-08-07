@@ -73,8 +73,8 @@ export async function deleteUrl(req, res){
             return res.sendStatus(401);
         }
         await connection.query(`
-            DELETE FROM urls WHERE "userId" = $1
-        `, [user.id]);
+            DELETE FROM urls WHERE "userId" = $1 AND id = $2
+        `, [user.id, id]);
 
         return res.sendStatus(204)
 

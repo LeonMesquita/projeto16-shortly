@@ -22,7 +22,6 @@ export async function getUserData(req, res){
         
         for(let count = 0; count < userData.length; count++){
             const data = userData[count];
-            console.log(data)
             const newObj = {
                 id: data.urlId,
                 shortUrl: data.shortUrl,
