@@ -1,19 +1,16 @@
-import connection from "../db/postgres.js";
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from "uuid";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import {authRepository} from '../repository/authRepository.js';
 dotenv.config();
 
 
 export async function registerUser(req, res){
     const user = res.locals.user;
-    const date = new Date;
     const encryptedPassword = bcrypt.hashSync(user.password, 10);
     try{
-        await connection.query(`
-            INSERT INTO users (name, email, password, "createdAt") VALUES ($1, $2, $3, $4)
-        `, [user.name, user.email, encryptedPassword, date]);
+        await authRepository.createUser(user.name, user.email, encryptedPassword);
         return res.sendStatus(201);
     }catch(error){
         return res.sendStatus(500);
@@ -28,14 +25,12 @@ export async function loginUser(req, res){
     const user = res.locals.user;
     const chaveSecreta = process.env.JWT_SECRET;
     try{
-        const {rows: findUser} = await connection.query(`
-        SELECT * FROM users WHERE email = $1
-    `, [user.email]);
-    if(findUser.length === 0){
+        const findUser = await authRepository.loginUser(user);
+    if(!findUser){
         return res.status(404).send('User not found');
     }
 
-    if(!bcrypt.compareSync(user.password, findUser[0].password)){
+    if(!bcrypt.compareSync(user.password, findUser.password)){
         return res.status(401).send('Incorrect email or password');
     }
     const token = jwt.sign(user, chaveSecreta);
@@ -45,12 +40,5 @@ export async function loginUser(req, res){
 
     }catch(error){
         return res.sendStatus(500)
-    }
-    
-
-    
+    } 
 }
-
-// await connection.query(`
-// INSERT INTO sessions (token, "userId") VALUES ($1, $2)
-// `, [token, findUser[0].id]);
