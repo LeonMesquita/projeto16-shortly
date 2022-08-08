@@ -2,10 +2,9 @@ import connection from "../db/postgres.js";
 
 
 async function createUser(name, email, encryptedPassword){
-    const date = new Date;
     await connection.query(`
-    INSERT INTO users (name, email, password, "createdAt") VALUES ($1, $2, $3, $4)
-`, [name, email, encryptedPassword, date]);
+    INSERT INTO users (name, email, password) VALUES ($1, $2, $3)
+`, [name, email, encryptedPassword]);
 }
 
 

@@ -5,7 +5,16 @@ export async function getUserData(req, res){
     const user = res.locals.user;
     try{
         const userData = await userRepository.getUserData(user);
-        //console.log(userData);
+        if(!userData){
+            return res.status(200).send(
+                {
+                    id: user.id,
+                    name: user.name,
+                    visitCount: 0,
+                    shortenedUrls: []
+                }
+            );
+        }
         return res.status(200).send(userData);
     }catch(error){
         console.log(error)

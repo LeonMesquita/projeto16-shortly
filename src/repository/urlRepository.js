@@ -1,10 +1,10 @@
 import connection from "../db/postgres.js";
 
 
-async function shortenUrl(shortUrl, url, userId, date){
+async function shortenUrl(shortUrl, url, userId){
     await connection.query(`
-        INSERT INTO urls ("shortUrl", url, "userId", "createdAt") VALUES ($1, $2, $3, $4)
-    `, [shortUrl, url, userId, date]);
+        INSERT INTO urls ("shortUrl", url, "userId") VALUES ($1, $2, $3)
+    `, [shortUrl, url, userId]);
 }
 
 

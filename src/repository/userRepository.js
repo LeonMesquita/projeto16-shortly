@@ -23,8 +23,8 @@ async function getRanking(){
         ORDER BY "visitCount" DESC
         LIMIT 10
     `;
-const {rows: ranking} = await connection.query(query);
-return ranking;
+    const {rows: ranking} = await connection.query(query);
+    return ranking;
 
 }
 

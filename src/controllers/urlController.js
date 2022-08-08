@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { nanoid } from 'nanoid';
 import {urlRepository} from '../repository/urlRepository.js';
 
@@ -8,9 +7,9 @@ export async function shortenUrl(req, res){
     const url = res.locals.url;
     const user = res.locals.user;
     const shortUrl = nanoid(8);
-    const date = new Date;
+
     try{
-        urlRepository.shortenUrl(shortUrl, url, user.id, date);
+        urlRepository.shortenUrl(shortUrl, url, user.id);
         return res.status(201).send({shortUrl});
     }catch(error){
         return res.sendStatus(500);
