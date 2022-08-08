@@ -10,8 +10,8 @@ async function shortenUrl(shortUrl, url, userId, date){
 
 async function getUrl(id){
     const {rows: url} = await connection.query(`
-    SELECT * FROM urls WHERE id=$1
-`, [id]);
+        SELECT * FROM urls WHERE id=$1
+    `, [id]);
     return url[0];
 
 }

@@ -14,8 +14,8 @@ async function getUserData(user){
      `, [user.id]);
 
      newData = {
-        id: userData[0].id,
-        name: userData[0].name
+        id: userData[0]?.id,
+        name: userData[0]?.name
     }
     
     for(let count = 0; count < userData.length; count++){
@@ -31,6 +31,7 @@ async function getUserData(user){
     }
     newData['visitCount'] = visitCount;
     newData['shortenedUrls'] = shortenedUrls;
+   
 
     return newData;
 }

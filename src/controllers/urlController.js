@@ -42,8 +42,7 @@ export async function openShortUrl(req, res){
         }
         const visitorsCount = url.visitCount + 1;
         await urlRepository.updateVisitCount(visitorsCount, url.id);
-        console.log(url.url)
-        res.redirect(`${url.url}`);
+        res.redirect(200, `${url.url}`);
     }catch(error){
         return res.sendStatus(500);
     }
@@ -56,19 +55,17 @@ export async function deleteUrl(req, res){
     const id = req.params.id;
     try{
         const url = await urlRepository.getUrl(id);
-
-        console.log(url);
-        if(url.length === 0){
+        if(!url){
             return res.sendStatus(404);
         }
 
         if(url.userId !== user.id){
             return res.sendStatus(401);
         }
-
         urlRepository.deleteUrl(user, id);
         return res.sendStatus(204);
     }catch(error){
+        console.log(error)
         return res.sendStatus(500);
 
     }

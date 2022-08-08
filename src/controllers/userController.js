@@ -5,8 +5,10 @@ export async function getUserData(req, res){
     const user = res.locals.user;
     try{
         const userData = await userRepository.getUserData(user);
+        //console.log(userData);
         return res.status(200).send(userData);
     }catch(error){
+        console.log(error)
         return res.sendStatus(500);
     }
 }
