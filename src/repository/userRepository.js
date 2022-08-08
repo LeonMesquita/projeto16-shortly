@@ -1,40 +1,14 @@
 import connection from "../db/postgres.js";
 
-
 async function getUserData(user){
-    let newData;
-    const shortenedUrls = [];
-    let visitCount = 0;
-
     const {rows: userData} = await connection.query(`
-        SELECT users.id, users.name, urls.id as "urlId", urls."shortUrl", urls.url, urls."visitCount" FROM users
-        JOIN urls ON urls."userId" = users.id
-        WHERE users.id = $1
-        GROUP BY users.id, urls.id
+            SELECT users.id as id,users.name as name,SUM("visitCount") as "visitCount"
+            , json_agg(json_build_object('id',urls.id,'shortUrl', urls."shortUrl",'url',urls.url,'visitCount',urls."visitCount")) AS "shortenedUrls"
+            FROM urls JOIN users ON users.id="userId" WHERE "userId"= $1 GROUP BY users.id;
      `, [user.id]);
-
-     newData = {
-        id: userData[0]?.id,
-        name: userData[0]?.name
-    }
-    
-    for(let count = 0; count < userData.length; count++){
-        const data = userData[count];
-        const newObj = {
-            id: data.urlId,
-            shortUrl: data.shortUrl,
-            url: data.url,
-            visitCount: data.visitCount
-        }
-        visitCount += Number(data.visitCount);
-        shortenedUrls.push(newObj);
-    }
-    newData['visitCount'] = visitCount;
-    newData['shortenedUrls'] = shortenedUrls;
-   
-
-    return newData;
+    return userData[0];
 }
+
 
 
 async function getRanking(){
